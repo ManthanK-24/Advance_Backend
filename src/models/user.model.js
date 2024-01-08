@@ -55,7 +55,7 @@ userSchema.pre("save", async function (next){
 
     // only hash when password got generated first time or password is updated
     if(!this.isModified("password"))return next();
-    this.password = bcrypt.hash(this.password,10);
+    this.password = await bcrypt.hash(this.password,10);
     next()
 })
 
@@ -93,4 +93,4 @@ userSchema.methods.generateRefreshToken = function(){
 }
 
 
-export const User = mongoose.Model("User",userSchema);
+export const User = mongoose.model("User",userSchema);

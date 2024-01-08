@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 const app  = express();
 
 
+
 // configurations: 
 
 // for allowing frontend to interact with backend
@@ -24,6 +25,13 @@ app.use(express.urlencoded({extended:true,limit:"16kb"}))
 app.use(express.static("public"))
 
 // only server must be able to perform crud operations on user's browser & securely 
-app.use(express.cookieParser());
+app.use(cookieParser());
 
-export {app};
+
+// routes
+import userRouter from './routes/user.routes.js' // .js use must
+
+// routes declartaion
+app.use("/api/v1/users",userRouter)  // middleware because to bring router we need it
+
+export {app}
