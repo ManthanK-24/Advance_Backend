@@ -47,7 +47,10 @@ const registerUser = asyncHandler( async(req,resp)=>{
         throw new ApiError(409,"User with email or username already exists")
     }
     //console.log(req.files)
-    const avatarLocalPath = req.files?.avatar[0]?.path;
+    let avatarLocalPath;
+    if(req.files && req.files.avatar && req.files.avatar.length>0)
+    avatarLocalPath = req.files?.avatar[0]?.path;
+
     // const coverImageLocalPath = req.files?.coverImage[0]?.path;
     let coverImageLocalPath;
 
@@ -63,7 +66,7 @@ const registerUser = asyncHandler( async(req,resp)=>{
 
     if(!avatar)
     {
-        throw new ApiError(400,"Avatar file is required")
+        throw new ApiError(500,"Something went wrong while uploading avatar file on cloudinary")
     }
 
     // if any err comes will be handle by asyncHandler
@@ -86,11 +89,17 @@ const registerUser = asyncHandler( async(req,resp)=>{
         throw new ApiError(500,"Something went wrong while registering the user")
     }
     
-    const tmp =  resp.status(201).json(
+//     const tmp =  resp.status(201).json(
+//         new ApiResponse(200,userCreatedInDB,"User registered successfully")
+//     )
+//    console.log("tmp:",tmp)
+//     return tmp
+      
+    return   resp.status(201).json(
         new ApiResponse(200,userCreatedInDB,"User registered successfully")
     )
-   // console.log("tmp:",tmp)
-    return tmp
+   
+    
 })
 
 const loginUser = asyncHandler(async (req,resp)=>{
@@ -218,7 +227,10 @@ const changeCurrentPassword = asyncHandler(async(req,resp)=>{
     // so if user reaches here, user is valid user
 
     const{oldPassword,newPassword} = req.body
+    //console.log("oldPassword",oldPassword);
+   // console.log("newPassword",newPassword);
     const user = await User.findById(req.user?._id)
+   // console.log("user:",user)
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
     if(!isPasswordCorrect)
     {
