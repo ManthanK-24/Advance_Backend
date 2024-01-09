@@ -1,7 +1,7 @@
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { uploadOnCloudinary,deleteOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 
@@ -302,6 +302,12 @@ const updateUserAvatar = asyncHandler(async(req,resp)=>{
         throw new ApiError(400,"Error while uploading on avatar")
 
     }
+    
+    //console.log("ans: ",req.user.avatar.split("/").pop().split(".")[0]);
+    
+    await deleteOnCloudinary(req.user.avatar.split("/").pop().split(".")[0]);  // last part of str before
+
+
     const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
@@ -311,7 +317,7 @@ const updateUserAvatar = asyncHandler(async(req,resp)=>{
         },
         {new:true}
     ).select("-password")
-
+    
     return resp
             .status(200)
             .json(
@@ -326,7 +332,7 @@ const updateUserAvatar = asyncHandler(async(req,resp)=>{
 const updateUserCoverImage = asyncHandler(async(req,resp)=>{
     // verifyJWT middleware
     // then use multer middleware
-    // so these method will update avatar of authenticated user
+    // so these method will update coverImage of authenticated user
 
     const coverImageLocalPath = req.file?.path
 
@@ -339,6 +345,7 @@ const updateUserCoverImage = asyncHandler(async(req,resp)=>{
         throw new ApiError(400,"Error while uploading on CoverImage")
 
     }
+    await deleteOnCloudinary(req.user.coverImage.split("/").pop().split(".")[0]);
     const user = await User.findByIdAndUpdate(
         req.user?._id,
         {

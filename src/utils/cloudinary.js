@@ -1,5 +1,6 @@
 import {v2 as cloudinary} from "cloudinary";
 import fs from "fs";  // filesystem nodejs
+import { ApiError } from "./ApiError.js";
 
 
           
@@ -26,5 +27,14 @@ const uploadOnCloudinary = async (localFilePath) => {
     }
 }
 
+const deleteOnCloudinary = async(cloudinary_public_id) =>{
+    try {
+        await cloudinary.uploader.destroy(cloudinary_public_id);
+        
+    } catch (error) {
+        throw new ApiError(500, "Something went wrong while updating Image File")
+    }
+}
 
-export {uploadOnCloudinary};
+
+export {uploadOnCloudinary,deleteOnCloudinary};
