@@ -243,13 +243,9 @@ const changeCurrentPassword = asyncHandler(async(req,resp)=>{
     .json(new ApiResponse(200,{},"Password Changed Successfully"))
 })
 
-const getCurrentUser = asyncHandler(async(req,reps)=>{
+const getCurrentUser = asyncHandler(async(req,resp)=>{
     // add verifyJWT middleware which adds req.user to req
-
-    // const user = await User.findById(req.user?._id)
-    // if(!user){
-    //     throw new ApiError(400, "Invalid user credentials")
-    // }
+    
     return resp
             .status(200)
             .json(new ApiResponse(200,
