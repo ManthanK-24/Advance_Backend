@@ -256,6 +256,7 @@ const getCurrentUser = asyncHandler(async(req,resp)=>{
 
 const updateAccountDetails = asyncHandler(async(req,resp)=>{
     
+    // username is not allowed to change as brand get's established 
     const{fullName, email} = req.body;
 
     if(!fullName || !email){
